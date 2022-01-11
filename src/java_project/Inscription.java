@@ -7,8 +7,12 @@ package java_project;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -62,6 +66,29 @@ PreparedStatement pst=null;
          JOptionPane.showMessageDialog(null,"The gender field is empty");
          return false;}
      return true;
+    }
+    public boolean existe()
+    {
+        String user= username.getText();
+        @SuppressWarnings("deprecation")
+        String pass;
+        pass = password.getText();
+        try
+        {
+            String rq="SELECT * FROM `inscription` WHERE password='"+pass+"'";
+           con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ict207","root","");
+            //pst=(PreparedStatement) con.prepareStatement(rq);
+            Statement st=(Statement) con.createStatement();
+            ResultSet set=st.executeQuery(rq);
+            if(set.next())
+            {
+             return true;  
+            } 
+        }catch(HeadlessException | SQLException ex)
+        {
+           JOptionPane.showMessageDialog(this,ex); 
+        }
+        return true;
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -321,25 +348,32 @@ PreparedStatement pst=null;
       {
           if(isvalid())
           {
-            String rq="INSERT INTO `connexion`(`username`, `password`) VALUES (?,?)";
-            String query ="INSERT INTO `inscription`(`nom`, `prenom`, `addresse`, `genre`, `tel`, `username`, `password`, `email`) VALUES ( ?,?,?,?,?,?,?,?)";
-            con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ict207","root","");
-            pst=(PreparedStatement) con.prepareStatement(query);
-            pst.setString(1, nom.getText());
-            pst.setString(2, prenom.getText());
-            pst.setString(3, addresse.getText());
-            pst.setString(4, genre.getSelectedItem().toString());
-            pst.setString(5, tel.getText());
-            pst.setString(6, username.getText());
-            pst.setString(7, password.getText());
-            pst.setString(8, email.getText());
-            pst.executeUpdate();
-            pst=(PreparedStatement) con.prepareStatement(rq);
-            pst.setString(1, username.getText());
-            pst.setString(2, password.getText());
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Register successfully");
-            vider();
+            if(existe())
+            { 
+                JOptionPane.showMessageDialog(null,"un utilisateur utilse deja ces informations");
+            }
+            else
+            {
+                String rq="INSERT INTO `connexion`(`username`, `password`) VALUES (?,?)";
+                String query ="INSERT INTO `inscription`(`nom`, `prenom`, `addresse`, `genre`, `tel`, `username`, `password`, `email`) VALUES ( ?,?,?,?,?,?,?,?)";
+                con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ict207","root","");
+                pst=(PreparedStatement) con.prepareStatement(query);
+                pst.setString(1, nom.getText());
+                pst.setString(2, prenom.getText());
+                pst.setString(3, addresse.getText());
+                pst.setString(4, genre.getSelectedItem().toString());
+                pst.setString(5, tel.getText());
+                pst.setString(6, username.getText());
+                pst.setString(7, password.getText());
+                pst.setString(8, email.getText());
+                pst.executeUpdate();
+                pst=(PreparedStatement) con.prepareStatement(rq);
+                pst.setString(1, username.getText());
+                pst.setString(2, password.getText());
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(null,"Register successfully");
+                vider();
+            }    
           }
             
       }catch(Exception ex)
