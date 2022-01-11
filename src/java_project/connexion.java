@@ -90,6 +90,11 @@ PreparedStatement pst=null;
         jLabel5.setForeground(new java.awt.Color(102, 102, 255));
         jLabel5.setText("Create An Account ?");
         jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -180,6 +185,14 @@ PreparedStatement pst=null;
         } 
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    @SuppressWarnings("deprecation")
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        this.hide();
+        Inscription ss=new Inscription();
+        ss.show();
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
