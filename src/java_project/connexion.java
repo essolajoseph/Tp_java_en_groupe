@@ -8,6 +8,7 @@ package java_project;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
+import java.awt.HeadlessException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -140,7 +141,8 @@ PreparedStatement pst=null;
         // TODO add your handling code here:
         String user= username.getText();
         @SuppressWarnings("deprecation")
-        String pass = password.getText();
+        String pass;
+        pass = password.getText();
         try
         {
             String rq="SELECT `username`, `password` FROM `connexion` WHERE username='"+user+"'";
@@ -153,10 +155,14 @@ PreparedStatement pst=null;
                 this.hide();
               Client ss=new Client(); 
               ss.show();
+            } 
+            else
+            {
+             JOptionPane.showMessageDialog(null,"invalid password or username");   
             }
-        }catch(SQLException ex)
+        }catch(HeadlessException | SQLException ex)
         {
-           JOptionPane.showConfirmDialog(this,"invalid password or username"); 
+           JOptionPane.showMessageDialog(this,ex); 
         } 
         
     }//GEN-LAST:event_jButton1ActionPerformed
