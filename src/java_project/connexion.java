@@ -29,7 +29,11 @@ PreparedStatement pst=null;
     public connexion() {
         initComponents();
     }
-
+public void vider()
+    {
+        username.setText("");
+        password.setText("");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,6 +76,7 @@ PreparedStatement pst=null;
         jLabel4.setText("Username :");
 
         username.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         password.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         password.setText("jPasswordField1");
@@ -169,15 +174,20 @@ PreparedStatement pst=null;
             //pst=(PreparedStatement) con.prepareStatement(rq);
             Statement st=(Statement) con.createStatement();
             ResultSet set=st.executeQuery(rq);
+            
             if(set.next())
             {
                 this.hide();
               Client ss=new Client(); 
               ss.show();
+               /*String nom=set.getString(1);
+            JOptionPane.showMessageDialog(null,nom);*///recuperer une donnée de la BD.
             } 
             else
             {
-             JOptionPane.showMessageDialog(null,"invalid password or username");   
+             JOptionPane.showMessageDialog(null,"invalid password or username");
+             vider();
+             password.nextFocus();
             }
         }catch(HeadlessException | SQLException ex)
         {
