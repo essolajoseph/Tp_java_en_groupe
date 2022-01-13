@@ -373,6 +373,7 @@ PreparedStatement pst=null;
                 pst.executeUpdate();
                 JOptionPane.showMessageDialog(null,"Register successfully");
                 vider();
+                
             }    
           }
             
