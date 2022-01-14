@@ -1,4 +1,8 @@
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +11,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -22,9 +29,12 @@ import javax.swing.JOptionPane;
  */
 public class Serveur extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Serveur
-     */
+   static String url="jdbc:mysql://localhost:3306/ict207";
+   static String login="root";
+   static String passwd="";
+   static Connection cn=null;
+   static Statement st=null;
+   static PreparedStatement pst=null;
     public Serveur() {
         initComponents();
     }
@@ -113,12 +123,17 @@ public class Serveur extends javax.swing.JFrame {
         try {
             try ( ServerSocket ss = new ServerSocket(1234)) {
                 while (true) {
-                    Socket s = ss.accept();
-                    ++nbClients;
-                    Conversation c= new Conversation(s,nbClients);
-                    clientsConnectes.add(c);
-                    c.start();
-                    new Conversation(s, nbClients).start();
+                Socket s = ss.accept();
+                InputStream is=s.getInputStream();
+                InputStreamReader isr= new InputStreamReader(is);
+                OutputStream os= s.getOutputStream();
+                BufferedReader br= new BufferedReader(isr);
+                PrintWriter pw= new PrintWriter(os,true);
+                 nbClients=Integer.parseInt(br.readLine());
+                 Conversation c= new Conversation(s,nbClients);
+                 clientsConnectes.add(c);
+                  c.start();
+                  new Conversation(s, nbClients).start();
                 }
             }
         } catch (Exception e)    {
@@ -157,8 +172,21 @@ public class Serveur extends javax.swing.JFrame {
                 BufferedReader br= new BufferedReader(isr);
                 PrintWriter pw= new PrintWriter(os,true);
                 String Ip= s.getRemoteSocketAddress().toString();
-                msgbox.setText(msgbox.getText().trim()+"\nconnexion du client numero "+numClients+" iP"+Ip);
-                pw.println(" vous etes le client numero "+numClients);
+                try {
+                    String query = "select * from connexion where numero='"+numClients+"'";
+                    cn = (Connection) DriverManager.getConnection(url, login, passwd);
+                    //pst=(PreparedStatement) cn.prepareStatement(query);
+                    st = (Statement)cn.createStatement();
+                   ResultSet set = st.executeQuery(query);
+                    if (set.next()) {
+                        String id = set.getString(1);
+                         nom = id;
+                         
+                    }
+                msgbox.setText(msgbox.getText().trim()+"\nconnexion de : "+nom+  " client numero : "+numClients+" IP : "+Ip);
+                pw.println(" vous etes "+nom+" le client numero "+numClients);
+                } catch (HeadlessException | SQLException e) {
+                }
                 while (true){
                     String req;
                     while((req=br.readLine())!=null) {
@@ -168,15 +196,12 @@ public class Serveur extends javax.swing.JFrame {
                       String[] t2=t[1].split(",");
                       int [] numeroClient= new int [t2.length];
                       for(int i=0;i<t2.length;i++){
-                          
                                numeroClient[i]=Integer.parseInt(t2[i]);
-                               JOptionPane.showConfirmDialog(null,""+numeroClient[i]);
                       } 
                       broadCast(messa,numeroClient);
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -207,6 +232,7 @@ public class Serveur extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Serveur().setVisible(true);
             }

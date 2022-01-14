@@ -20,9 +20,16 @@ import javax.swing.JOptionPane;
  */
 public class Client extends javax.swing.JFrame {
     static  String ms;
-     static Socket socket;
+    static Socket socket;
+    static int  num;
     public Client() {
         initComponents();
+    }
+    public Client(Socket socket,int num){
+          initComponents();
+        this.socket=socket;
+        this.num=num;
+        new ClientMT(socket).start();
     }
 
 public static class ClientMT extends Thread{
@@ -58,6 +65,7 @@ public static class ClientMT extends Thread{
                 OutputStream os= s.getOutputStream();
                 BufferedReader br= new BufferedReader(isr);
                 PrintWriter pw= new PrintWriter(os,true);
+                br.readLine();
                 while(true){
                 msgbox.setText(msgbox.getText().trim()+"\n"+br.readLine());   
                 }
@@ -229,8 +237,6 @@ public static class ClientMT extends Thread{
                 new Client().setVisible(true);
             }
         });
-         socket =new Socket("localhost",1234);
-         new ClientMT(socket).start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
