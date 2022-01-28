@@ -14,10 +14,7 @@ import javax.swing.JOptionPane;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-/**
- *
- * @author ESSOLA JULIEN
- */
+ 
 public class Client extends javax.swing.JFrame {
     static  String ms;
     static Socket socket;
@@ -189,16 +186,47 @@ public static class ClientMT extends Thread{
         msg.setText("");
        }
            else{
-                JOptionPane.showMessageDialog(null,"Veiller choisir le(s) destinataire(s)!");
+                JOptionPane.showMessageDialog(null,"Veillez choisir le(s) destinataire(s)!");
            }
        }
        else if(msg.getText().equals(" ")){
            
        }
        else{
-           JOptionPane.showMessageDialog(null,"Veiller Entrer Un Message!");
+           JOptionPane.showMessageDialog(null,"Veillez saisir Un Message!");
        }
     }//GEN-LAST:event_jButton1ActionPerformed
+    /*
+    private void msgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_msgActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       if(!msg.getText().equals("")){ 
+           if(!Id.getText().equals("")){
+        ms=msg.getText()+"-"+Id.getText();
+         try{
+                InputStream is=socket.getInputStream();
+                InputStreamReader isr= new InputStreamReader(is);
+                OutputStream os= socket.getOutputStream();
+                BufferedReader br= new BufferedReader(isr);
+                PrintWriter pw= new PrintWriter(os,true);
+                pw.println(ms);
+        }
+        catch(Exception ex){     
+        }
+   
+        msg.setText("");
+       }
+           else{
+                JOptionPane.showMessageDialog(null,"Veillez envoyer le msg au(x) destinataire(s)!");
+           }
+       }
+       else if(msg.getText().equals(" ")){
+           
+       }
+       else{
+           JOptionPane.showMessageDialog(null,"Veillez saisir Un Message!");*/
 
     private void IdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IdActionPerformed
         // TODO add your handling code here:
@@ -237,6 +265,10 @@ public static class ClientMT extends Thread{
                 new Client().setVisible(true);
             }
         });
+       /* java.awt.EventQueue.invokelater(new Runnable()) {
+            private void run() {
+                new Client(). setVisible(true);
+            }};*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
